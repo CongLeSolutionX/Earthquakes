@@ -16,6 +16,25 @@ enum BooksServiceError: Error {
     case decodingError(message: String)
 }
 
+// MARK: - Query
+enum BooksQuery {
+    case query(String)
+    case maxResults(Int)
+    case startIndex(Int)
+    case printType(String)
+    case langRestrict(String)
+
+    var queryItem: URLQueryItem {
+        switch self {
+        case .query(let string): return URLQueryItem(name: "q", value: string)
+        case .maxResults(let number): return URLQueryItem(name: "maxResults", value: "\(number)")
+        case .startIndex(let number): return URLQueryItem(name: "startIndex", value: "\(number)")
+        case .printType(let string): return URLQueryItem(name: "printType", value: string)
+        case .langRestrict(let string): return URLQueryItem(name: "langRestrict", value: string)
+        }
+    }
+}
+
 // MARK: - SERVICES
 ///  https://www.googleapis.com/books/v1/volumes?q=time&printType=magazines&key=AIzaSyDn3G9HAKGl07eN3-N0f_51NImwxszHbS0
 class BooksService {
@@ -31,13 +50,13 @@ class BooksService {
         return decoder
     }()
     
-    func fetchBooks(completion: @escaping (Result<[Item], Error>) -> Void) {
+    func fetchBooks(queries: [BooksQuery], completion: @escaping (Result<[Item], Error>) -> Void) {
         var urlComponents = URLComponents()
         urlComponents.scheme = "https"
         urlComponents.host = "www.googleapis.com"
         urlComponents.path = "/books/v1/volumes"
-        urlComponents.queryItems = [URLQueryItem(name: "q", value: "harry potter")]
-        
+        urlComponents.queryItems = queries.map { $0.queryItem }
+            
         guard let url = urlComponents.url else {
             DispatchQueue.main.async { completion(.failure(BooksServiceError.invalidURL)) }
             return
@@ -75,7 +94,7 @@ class BooksViewModel: ObservableObject {
     }
     
     func fetchBooks() {
-        booksService.fetchBooks { result in
+        booksService.fetchBooks(queries: [.query("harry potter"), .maxResults(10), .startIndex(2)]) { result in
             switch result {
             case .success(let books):
                 self.books = books
@@ -113,6 +132,8 @@ struct BooksView: View {
                     
                     Text(book.searchInfo.textSnippet)
                         .font(.caption2)
+                    
+                    Divider()
                     
                     Text(book.volumeInfo.description)
                         .font(.caption)
