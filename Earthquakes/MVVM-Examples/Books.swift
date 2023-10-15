@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 // MARK: - MODELS
-
+/// Documentation: https://developers.google.com/books/docs/v1/using 
 struct BookResponse: Codable {
     let kind: String
     let totalItems: Int
@@ -22,6 +22,8 @@ struct Item: Codable, Identifiable {
     let etag: String
     let selfLink: String
     let volumeInfo: VolumeInfo
+    let saleInfo: SaleInfo
+    let accessInfo: AccessInfo
 }
 
 struct VolumeInfo: Codable {
@@ -67,6 +69,34 @@ struct ImageLinks: Codable {
     let smallThumbnail, thumbnail: String
 }
 
+struct SaleInfo: Codable {
+    let country: String
+    let saleability: String
+    let isEbook: Bool
+}
+
+struct AccessInfo: Codable {
+    let country: String
+    let viewability: String
+    let embeddable: Bool
+    let publicDomain: Bool
+    let textToSpeechPermission: String
+    let epub: Epub
+    let pdf: Pdf
+    let webReaderLink: String
+    let accessViewStatus: String
+    let quoteSharingAllowed: Bool
+}
+
+struct Epub: Codable {
+    let isAvailable: Bool
+}
+
+struct Pdf: Codable {
+    let isAvailable: Bool
+}
+
+
 // MARK: - Error Cases
 enum BooksServiceError: Error {
     case invalidURL
@@ -76,6 +106,7 @@ enum BooksServiceError: Error {
 }
 
 // MARK: - SERVICES
+///  https://www.googleapis.com/books/v1/volumes?q=time&printType=magazines&key=AIzaSyDn3G9HAKGl07eN3-N0f_51NImwxszHbS0
 class BooksService {
     func fetchBooks(completion: @escaping (Result<[Item], BooksServiceError>) -> Void) {
         guard let url = URL(string: "https://www.googleapis.com/books/v1/volumes?q=harry+potter") else {
@@ -114,11 +145,11 @@ class BooksViewModel: ObservableObject {
     private let booksService: BooksService
     @Published var books = [Item]()
     @Published var error: BooksServiceError?
-
+    
     init(booksService: BooksService = BooksService()) {
         self.booksService = booksService
     }
-
+    
     func fetchBooks() {
         booksService.fetchBooks { result in
             switch result {
@@ -134,7 +165,7 @@ class BooksViewModel: ObservableObject {
 // MARK: - VIEW
 struct BooksView: View {
     @ObservedObject private var booksViewModel = BooksViewModel()
-
+    
     var body: some View {
         VStack {
             if let error = booksViewModel.error {
@@ -142,15 +173,30 @@ struct BooksView: View {
             }
             List(booksViewModel.books) { book in
                 VStack(alignment: .leading) {
-                    Text(book.volumeInfo.title).font(.headline)
-                    Text(book.volumeInfo.authors.first ?? "Anonymous").font(.subheadline)
+                    Text(book.volumeInfo.title)
+                        .font(.headline)
+                    
+                    Text(book.volumeInfo.authors.first ?? "Anonymous")
+                        .font(.subheadline)
+                    
+                    Text(book.volumeInfo.publishedDate)
+                        .font(.subheadline)
+                    
+                    Text(book.saleInfo.saleability).font(.callout)
+                    
+                    Text(book.accessInfo.webReaderLink)
+                    
+                    Text(book.volumeInfo.description)
+                        .font(.caption)
+                    
+                    Spacer()
                 }
             }.onAppear {
                 self.booksViewModel.fetchBooks()
             }
         }
     }
-
+    
     private func handleError(error: BooksServiceError) -> some View {
         switch error {
         case .invalidURL:
@@ -169,5 +215,5 @@ struct BooksView: View {
 #Preview {
     BooksView()
 }
-   
+
 
