@@ -9,23 +9,43 @@ import Foundation
 import SwiftUI
 
 // MARK: - MODELS
-struct Book: Codable, Identifiable {
+
+struct BookResponse: Codable {
+    let kind: String
+    let totalItems: Int
+    let items: [Item]
+}
+
+struct Item: Codable, Identifiable {
+    let kind: String
     let id: String
+    let etag: String
+    let selfLink: String
     let volumeInfo: VolumeInfo
 }
 
 struct VolumeInfo: Codable {
     let title: String
     let authors: [String]
-    let publisher: String?
+    let publishedDate: String?
     let description: String?
+    let industryIdentifiers: [IndustryIdentifier]
+    let readingModes: ReadingModes
+    let pageCount: Int?
+    let printType: String?
 }
 
-struct BooksResponse: Codable {
-    let items: [Book]
+struct IndustryIdentifier: Codable {
+    let type: String
+    let identifier: String
 }
 
-// MARK: Error Cases
+struct ReadingModes: Codable {
+    let text: Bool
+    let image: Bool
+}
+
+// MARK: - Error Cases
 enum BooksServiceError: Error {
     case invalidURL
     case noData
@@ -35,7 +55,7 @@ enum BooksServiceError: Error {
 
 // MARK: - SERVICES
 class BooksService {
-    func fetchBooks(completion: @escaping (Result<[Book], BooksServiceError>) -> Void) {
+    func fetchBooks(completion: @escaping (Result<[Item], BooksServiceError>) -> Void) {
         guard let url = URL(string: "https://www.googleapis.com/books/v1/volumes?q=harry+potter") else {
             completion(.failure(.invalidURL))
             return
@@ -54,7 +74,7 @@ class BooksService {
                 return
             }
             do {
-                let response = try JSONDecoder().decode(BooksResponse.self, from: data)
+                let response = try JSONDecoder().decode(BookResponse.self, from: data)
                 DispatchQueue.main.async {
                     completion(.success(response.items))
                 }
@@ -70,7 +90,7 @@ class BooksService {
 //MARK: - VIEWMODEL
 class BooksViewModel: ObservableObject {
     private let booksService: BooksService
-    @Published var books = [Book]()
+    @Published var books = [Item]()
     @Published var error: BooksServiceError?
 
     init(booksService: BooksService = BooksService()) {
@@ -101,6 +121,7 @@ struct BooksView: View {
             List(booksViewModel.books) { book in
                 VStack(alignment: .leading) {
                     Text(book.volumeInfo.title).font(.headline)
+                    Text(book.volumeInfo.authors.first ?? "Anonymous").font(.subheadline)
                 }
             }.onAppear {
                 self.booksViewModel.fetchBooks()
