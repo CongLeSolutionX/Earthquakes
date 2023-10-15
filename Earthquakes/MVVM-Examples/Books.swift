@@ -24,6 +24,7 @@ struct Item: Codable, Identifiable {
     let volumeInfo: VolumeInfo
     let saleInfo: SaleInfo
     let accessInfo: AccessInfo
+    let searchInfo: SearchInfo
 }
 
 struct VolumeInfo: Codable {
@@ -94,6 +95,10 @@ struct Epub: Codable {
 
 struct Pdf: Codable {
     let isAvailable: Bool
+}
+
+struct SearchInfo: Codable {
+    let textSnippet: String
 }
 
 
@@ -182,9 +187,13 @@ struct BooksView: View {
                     Text(book.volumeInfo.publishedDate)
                         .font(.subheadline)
                     
-                    Text(book.saleInfo.saleability).font(.callout)
+                    Text(book.saleInfo.saleability)
+                        .font(.callout)
                     
-                    Text(book.accessInfo.webReaderLink)
+                    Divider()
+                    
+                    Text(book.searchInfo.textSnippet)
+                        .font(.caption2)
                     
                     Text(book.volumeInfo.description)
                         .font(.caption)
