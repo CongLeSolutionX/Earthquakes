@@ -26,13 +26,27 @@ struct Item: Codable, Identifiable {
 
 struct VolumeInfo: Codable {
     let title: String
+    let subtitle: String?
     let authors: [String]
-    let publishedDate: String?
-    let description: String?
+    let publisher: String?
+    let publishedDate: String
+    let description: String
     let industryIdentifiers: [IndustryIdentifier]
     let readingModes: ReadingModes
     let pageCount: Int?
-    let printType: String?
+    let printType: String
+    let categories: [String]?
+    let averageRating: Double?
+    let ratingsCount: Int?
+    let maturityRating: String?
+    let allowAnonLogging: Bool?
+    let contentVersion: String?
+    let panelizationSummary: PanelizationSummary?
+    let imageLinks: ImageLinks
+    let language: String
+    let previewLink: String
+    let infoLink: String
+    let canonicalVolumeLink: String
 }
 
 struct IndustryIdentifier: Codable {
@@ -43,6 +57,14 @@ struct IndustryIdentifier: Codable {
 struct ReadingModes: Codable {
     let text: Bool
     let image: Bool
+}
+
+struct PanelizationSummary: Codable {
+    let containsEpubBubbles, containsImageBubbles: Bool?
+}
+
+struct ImageLinks: Codable {
+    let smallThumbnail, thumbnail: String
 }
 
 // MARK: - Error Cases
