@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4C6F04AF2ADC5636000FB908 /* BookModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C6F04AE2ADC5636000FB908 /* BookModel.swift */; };
 		4C8C9AC72ADC149000C19847 /* EarthquakesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8C9AC62ADC149000C19847 /* EarthquakesApp.swift */; };
 		4C8C9AC92ADC149000C19847 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8C9AC82ADC149000C19847 /* ContentView.swift */; };
 		4C8C9ACB2ADC149100C19847 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4C8C9ACA2ADC149100C19847 /* Assets.xcassets */; };
@@ -16,6 +17,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4C6F04AE2ADC5636000FB908 /* BookModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookModel.swift; sourceTree = "<group>"; };
 		4C8C9AC32ADC149000C19847 /* Earthquakes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Earthquakes.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C8C9AC62ADC149000C19847 /* EarthquakesApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EarthquakesApp.swift; sourceTree = "<group>"; };
 		4C8C9AC82ADC149000C19847 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -37,6 +39,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4C6F04AD2ADC561C000FB908 /* Google-Books */ = {
+			isa = PBXGroup;
+			children = (
+				4C8C9AD82ADC202000C19847 /* Books.swift */,
+				4C6F04AE2ADC5636000FB908 /* BookModel.swift */,
+			);
+			path = "Google-Books";
+			sourceTree = "<group>";
+		};
 		4C8C9ABA2ADC149000C19847 = {
 			isa = PBXGroup;
 			children = (
@@ -78,7 +89,7 @@
 			isa = PBXGroup;
 			children = (
 				4C8C9AD62ADC1EA700C19847 /* Post.swift */,
-				4C8C9AD82ADC202000C19847 /* Books.swift */,
+				4C6F04AD2ADC561C000FB908 /* Google-Books */,
 			);
 			path = "MVVM-Examples";
 			sourceTree = "<group>";
@@ -153,6 +164,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4C6F04AF2ADC5636000FB908 /* BookModel.swift in Sources */,
 				4C8C9AD92ADC202000C19847 /* Books.swift in Sources */,
 				4C8C9AD72ADC1EA700C19847 /* Post.swift in Sources */,
 				4C8C9AC92ADC149000C19847 /* ContentView.swift in Sources */,
