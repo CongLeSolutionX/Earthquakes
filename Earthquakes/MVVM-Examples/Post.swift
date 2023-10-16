@@ -9,7 +9,7 @@ import SwiftUI
 
 // MARK: - MODEL
 struct Post: Codable, Identifiable {
-    let id = UUID()
+    let id: Int
     let userId: Int
     let title: String
     let body: String
